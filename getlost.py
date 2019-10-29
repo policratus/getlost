@@ -5,6 +5,8 @@ Created on Sun May  6 09:38:10 2018
 
 @author: policratus
 """
+import sys
+
 import numpy as np
 from PIL import Image, ImageDraw
 import networkx as nx
@@ -72,15 +74,20 @@ def pathfinder():
             graph.number_of_edges()
         )
     )
-    print("Finding best path")
-    points = [
-        list(map(int, visited.split('|')))
-        for visited in nx.algorithms.astar_path(
-            graph,
-            str(starting_star_h) + '|' + str(starting_star_w),
-            str(target_star_h) + '|' + str(target_star_w)
-        )
-    ]
+
+    try:
+        print("Finding best path")
+        points = [
+            list(map(int, visited.split('|')))
+            for visited in nx.algorithms.astar_path(
+                graph,
+                str(starting_star_h) + '|' + str(starting_star_w),
+                str(target_star_h) + '|' + str(target_star_w)
+            )
+        ]
+    except nx.exception.NetworkXNoPath:
+        print("The worlds are not on the same space-time grid. Try another parallel reality.")
+        sys.exit()
 
     print("Travelling! FTL speed reached")
     for point in points:
@@ -118,7 +125,4 @@ def pathfinder():
 
 
 if __name__ == '__main__':
-    try:
-        pathfinder()
-    except nx.exception.NetworkXNoPath:
-        print("The worlds are not on the same space-time grid. Try another parallel reality.")
+    pathfinder()
